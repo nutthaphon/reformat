@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:scb1="http://www.scb.co.th/edi/schemas/EDI_ClientB_PS"
+            targetNamespace="http://www.scb.co.th/edi/schemas/EDI_ClientB_PS" elementFormDefault="qualified">
+  <xsd:element name="RequestElement">
+    <xsd:annotation>
+      <xsd:documentation>A sample element</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="filepath" type="xsd:string"/>
+        <xsd:element name="action" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ResponseElement">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="return" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FaultElement">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="code" type="xsd:string"/>
+        <xsd:element name="message" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

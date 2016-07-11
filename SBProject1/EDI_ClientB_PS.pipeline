@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:pipelineEntry xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con2="http://www.bea.com/wli/sb/stages/config" xmlns:con3="http://www.bea.com/wli/sb/stages/publish/config" xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+    <con:coreEntry>
+        <con:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType">
+            <con:wsdl ref="SBProject1/EDI_ClientB_PS"/>
+            <con:binding>
+                <con:name>execute_bind</con:name>
+                <con:namespace>http://xmlns.oracle.com/SCB_EDI_Application/SBProject1/EDI_ClientB_PS</con:namespace>
+            </con:binding>
+        </con:binding>
+        <con:xqConfiguration>
+            <con:snippetVersion>1.0</con:snippetVersion>
+        </con:xqConfiguration>
+    </con:coreEntry>
+    <con:router>
+        <con:pipeline type="request" name="request-7f000001.2ee412ef.0.155c8c77ad4.N7fff">
+            <con:stage id="_StageId-7f000001.431e94cf.0.155ca1ea2f3.N7ff7" name="Starting">
+                <con:context>
+                    <con2:userNsDecl prefix="edi" namespace="http://www.scb.co.th/edi/schemas/EDI_ClientB_PS"/>
+                </con:context>
+                <con:actions>
+                    <con4:report>
+                        <con2:id>_ActionId-7f000001.431e94cf.0.155ca1ea2f3.N7fc2</con2:id>
+                        <con4:expr>
+                            <con2:xqueryText>$body</con2:xqueryText>
+                        </con4:expr>
+                        <con4:labels>
+                            <con4:key>start</con4:key>
+                            <con4:varName>body</con4:varName>
+                            <con4:value>
+                                <con2:xpathText>./edi:RequestElement/edi:filepath</con2:xpathText>
+                            </con4:value>
+                        </con4:labels>
+                    </con4:report>
+                </con:actions>
+            </con:stage>
+            <con:stage id="_StageId-7f000001.2ee412ef.0.155c8c77ad4.N7ffd" name="Native_To_XML">
+                <con:context>
+                    <con2:userNsDecl prefix="ns0" namespace="http://TargetNamespace.com/ServiceName"/>
+                </con:context>
+                <con:actions>
+                    <con1:wsCallout>
+                        <con2:id>_ActionId-7f000001.2ee412ef.0.155c8c77ad4.N7ff9</con2:id>
+                        <con1:service ref="SBProject1/Get_ClientB1_BS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                        <con1:request>
+                            <con1:payload wrapped="false">body</con1:payload>
+                        </con1:request>
+                        <con1:response>
+                            <con1:payload wrapped="false">clientB1CSV</con1:payload>
+                        </con1:response>
+                        <con1:requestTransform>
+                            <con1:routing-options>
+                                <con2:id>_ActionId-7f000001.431e94cf.0.155ca1ea2f3.N7ffe</con2:id>
+                            </con1:routing-options>
+                        </con1:requestTransform>
+                        <con1:responseTransform>
+                            <con1:nxsdTranslation>
+                                <con2:id>_ActionId-7f000001.2ee412ef.0.155c8c77ad4.N7ff6</con2:id>
+                                <con1:type>Native-To-XML</con1:type>
+                                <con1:sourceExpr>
+                                    <con2:xqueryText>$clientB1CSV</con2:xqueryText>
+                                </con1:sourceExpr>
+                                <con1:nxsd ref="SBProject1/nxsd_clientb1_schema"/>
+                                <con1:schemaElement xmlns:ser="http://TargetNamespace.com/ServiceName">ser:ClientB1</con1:schemaElement>
+                                <con1:assign-variable>clientB1XML</con1:assign-variable>
+                                <con1:enforceSchemaOrder>true</con1:enforceSchemaOrder>
+                            </con1:nxsdTranslation>
+                        </con1:responseTransform>
+                    </con1:wsCallout>
+                    <con1:assign varName="scbXML">
+                        <con2:id>_ActionId-7f000001.2f074994.0.155c98af2bd.N7f68</con2:id>
+                        <con1:expr>
+                            <con2:xsltTransform>
+                                <con2:resource ref="SBProject1/ClientB1_To_SCBStandard1"/>
+                                <con2:input>$clientB1XML</con2:input>
+                            </con2:xsltTransform>
+                        </con1:expr>
+                    </con1:assign>
+                </con:actions>
+            </con:stage>
+            <con:stage id="_StageId-7f000001.2ee412ef.0.155c8c77ad4.N7f8d" name="Re_Format">
+                <con:context>
+                    <con2:userNsDecl prefix="edi" namespace="http://www.scb.co.th/edi/schemas/EDI_ClientB_PS"/>
+                </con:context>
+                <con:actions>
+                    <con3:route>
+                        <con2:id>_ActionId-7f000001.2f074994.0.155c98af2bd.N7ecf</con2:id>
+                        <con3:service ref="SBProject1/Put_SCB_BS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                        <con3:outboundTransform>
+                            <con1:nxsdTranslation>
+                                <con2:id>_ActionId-7f000001.2f074994.0.155c98af2bd.N7ecc</con2:id>
+                                <con1:type>XML-To-Native</con1:type>
+                                <con1:sourceExpr>
+                                    <con2:xqueryText>$scbXML</con2:xqueryText>
+                                </con1:sourceExpr>
+                                <con1:nxsd ref="SBProject1/nxsd_scb_schema1"/>
+                                <con1:schemaElement xmlns:ser="http://TargetNamespace.com/ServiceName">ser:SCBStandard1</con1:schemaElement>
+                                <con1:replace-body-content/>
+                            </con1:nxsdTranslation>
+                        </con3:outboundTransform>
+                    </con3:route>
+                    <con4:report>
+                        <con2:id>_ActionId-7f000001.73b9e845.0.155cb109bbe.N7ffb</con2:id>
+                        <con4:expr>
+                            <con2:xqueryText>$body</con2:xqueryText>
+                        </con4:expr>
+                        <con4:labels>
+                            <con4:key>finish</con4:key>
+                            <con4:varName>body</con4:varName>
+                            <con4:value>
+                                <con2:xpathText>./edi:RequestElement/edi:filepath</con2:xpathText>
+                            </con4:value>
+                        </con4:labels>
+                    </con4:report>
+                </con:actions>
+            </con:stage>
+        </con:pipeline>
+        <con:pipeline type="response" name="response-7f000001.2ee412ef.0.155c8c77ad4.N7ffe">
+            <con:stage id="_StageId-7f000001.3e30b9f0.0.155c9d44d21.N7ffe" name="Finishing">
+                <con:context/>
+                <con:actions>
+                    <con1:replace varName="body" contents-only="true">
+                        <con2:id>_ActionId-7f000001.3e30b9f0.0.155c9d44d21.N7ffd</con2:id>
+                        <con1:location>
+                            <con2:xpathText>.</con2:xpathText>
+                        </con1:location>
+                        <con1:expr>
+                            <con2:xqueryText>$scbXML</con2:xqueryText>
+                        </con1:expr>
+                    </con1:replace>
+                </con:actions>
+            </con:stage>
+        </con:pipeline>
+        <con:flow>
+            <con:pipeline-node name="PipelinePairNode1">
+                <con:request>request-7f000001.2ee412ef.0.155c8c77ad4.N7fff</con:request>
+                <con:response>response-7f000001.2ee412ef.0.155c8c77ad4.N7ffe</con:response>
+            </con:pipeline-node>
+        </con:flow>
+    </con:router>
+</con:pipelineEntry>

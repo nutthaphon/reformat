@@ -1,0 +1,2 @@
+1;apisak kebraksa;1234567890;101;030:Govermance Saving Bank;aaa@gmail.com;N;12;101
+2;คุณปิยะนันท์ โทนัน;6654567890;501;004:Kasikorn Bank;bbb@gmail.com;Y;12;489
