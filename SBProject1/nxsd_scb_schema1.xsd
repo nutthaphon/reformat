@@ -24,12 +24,4 @@
     </xsd:complexType>
   </xsd:element>
 
-<xsd:annotation>
-      <xsd:appinfo>NXSDSAMPLE=/u02/oracle/developer/mywork/SCB_EDI_Application/SCB/Sample/fixedlength.txt</xsd:appinfo>
-      <xsd:appinfo>USEHEADER=false</xsd:appinfo>
-   </xsd:annotation>
-<xsd:annotation>
-      <xsd:appinfo>NXSDSAMPLE=/u02/oracle/developer/mywork/SCB_EDI_Application/SCB/Sample/fixedlength.txt</xsd:appinfo>
-      <xsd:appinfo>USEHEADER=false</xsd:appinfo>
-   </xsd:annotation>
 </xsd:schema>
